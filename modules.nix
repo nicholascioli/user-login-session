@@ -1,5 +1,9 @@
-self: { config, lib, pkgs, ... }:
-
+self: {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib; let
   cfg = config.programs.user-login-session;
 in {

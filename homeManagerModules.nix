@@ -1,11 +1,14 @@
-self: { config, lib, pkgs, ... }:
-
-let
+self: {
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.user-login-session;
   defaultPackage = self.packages.${pkgs.system}.default;
-  toEnv = vars: lib.strings.concatStringsSep "\n"
+  toEnv = vars:
+    lib.strings.concatStringsSep "\n"
     (lib.attrsets.mapAttrsToList (name: value: "export ${name}=${value}") vars);
-
 in {
   options.user-login-session = {
     enable = lib.mkEnableOption "user-managed login session";
