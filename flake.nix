@@ -37,7 +37,7 @@
             inherit name;
 
             paths = [script session] ++ scriptBuildInputs;
-            buildInputs = [pkgs.makeWrapper];
+            buildInputs = with pkgs; [makeWrapper dialog];
             postBuild = "wrapProgram $out/bin/${name} --prefix PATH : $out/bin";
 
             passthru.providedSessions = [
