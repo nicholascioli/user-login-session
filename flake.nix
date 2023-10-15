@@ -15,6 +15,8 @@
       system: let
         pkgs = import nixpkgs {inherit system;};
         name = "user-login-session";
+
+        # Define the script (included externally) and its necessary dependencies
         src = builtins.readFile ./user-login-session.sh;
         scriptBuildInputs = with pkgs; [dialog];
         script = (pkgs.writeScriptBin name src).overrideAttrs (old: {
@@ -37,7 +39,7 @@
             inherit name;
 
             paths = [script session] ++ scriptBuildInputs;
-            buildInputs = with pkgs; [makeWrapper dialog];
+            buildInputs = with pkgs; [makeBinaryWrapper];
             postBuild = "wrapProgram $out/bin/${name} --prefix PATH : $out/bin";
 
             passthru.providedSessions = [
