@@ -12,42 +12,7 @@
     utils,
   }:
     utils.lib.eachDefaultSystem (
-      system: let
-        pkgs = import nixpkgs {inherit system;};
-        name = "user-login-session";
-
-        # Define the script (included externally) and its necessary dependencies
-        src = builtins.readFile ./user-login-session.sh;
-        scriptBuildInputs = with pkgs; [dialog];
-        script = (pkgs.writeScriptBin name src).overrideAttrs (old: {
-          buildCommand = "${old.buildCommand}\n patchShebangs $out";
-        });
-
-        session = pkgs.writeTextDir "share/wayland-sessions/user-login-session.desktop" ''
-          [Desktop Entry]
-          Name=User-Managed Login Session
-          Comment=User-managed session settings.
-          Exec=${script}/bin/user-login-session
-          Type=Application
-        '';
-        sessionLocation = "user-login-session/session";
-      in {
-        packages = rec {
-          default = user-login-session;
-
-          user-login-session = pkgs.symlinkJoin {
-            inherit name;
-
-            paths = [script session] ++ scriptBuildInputs;
-            buildInputs = with pkgs; [makeBinaryWrapper];
-            postBuild = "wrapProgram $out/bin/${name} --prefix PATH : $out/bin";
-
-            passthru.providedSessions = [
-              "user-login-session"
-            ];
-          };
-        };
-
+      system: {
         nixosModules.default = import ./modules.nix self;
         homeManagerModules.default = import ./homeManagerModules.nix self;
       }
