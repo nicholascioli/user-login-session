@@ -5,10 +5,9 @@ self: {
   ...
 }: let
   cfg = config.user-login-session;
-  defaultPackage = self.packages.${pkgs.system}.default;
   toEnv = vars:
     lib.strings.concatStringsSep "\n"
-    (lib.attrsets.mapAttrsToList (name: value: "export ${name}=${value}") vars);
+    (lib.attrsets.mapAttrsToList (name: value: "export ${name}='${value}'") vars);
 in {
   options.user-login-session = {
     enable = lib.mkEnableOption "user-managed login session";
